@@ -1,0 +1,24 @@
+{
+  "name": "sql-team-6",
+  "version": "1.0.0",
+  "description": "mySql command line employee tracker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielMrva/Sql-Team-6.git"
+  },
+  "author": "Daniel Mrva",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DanielMrva/Sql-Team-6/issues"
+  },
+  "dependencies": {
+    "mysql2": "^2.3.3",
+    "inquirer": "^8.2.1",
+    "console.table": "^0.10.0"
+  },
+  "homepage": "https://github.com/DanielMrva/Sql-Team-6#readme"
+}
