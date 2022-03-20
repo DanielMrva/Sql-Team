@@ -2,7 +2,7 @@ const mySql2 = require("mysql2");
 const inquirer = require("inquirer");
 // const cTable = require("console.table");
 const db = require("./db/index.js");
-const {selectAll, displayChoices, joinTable} = require("./db/queries.js");
+const {selectAll, dispRoleChoices, dispMgrChoices, joinTable} = require("./db/queries.js");
 
 // GIVEN a command-line application that accepts user input
 // WHEN I start the application
@@ -22,8 +22,6 @@ const {selectAll, displayChoices, joinTable} = require("./db/queries.js");
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 
-const title = "title";
-const roles = "roles";
 
 const mainMenu = {
     type: "list",
@@ -32,28 +30,38 @@ const mainMenu = {
     choices: ["View All Employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department", "Quit"]
 };
 
+const pause = {
+    type: "type",
+    name: "continue",
+    message: "Press Enter To Continue",
+    default: "true",
+}
+
 
 async function mainPrompt () {
-
+    
     let mainAction = await inquirer.prompt(mainMenu);
 
     switch (mainAction.mainAction) {
         
         case "View All Employees": 
             let employees = "employees";
-            await selectAll(employees)
+            await selectAll(employees);
+            await inquirer.prompt(pause);
             console.log("\n ---------------");
             // await initPrompt ();
             break;
         case "View All Roles": 
             let roles = "roles";
-            await selectAll(roles)
+            await selectAll(roles);
+            await inquirer.prompt(pause);
             console.log("\n ---------------");
             // await initPrompt ();
             break;
         case "View All Departments": 
             let departments = "departments";
-            await selectAll(departments)
+            await selectAll(departments);
+            await inquirer.prompt(pause);
             console.log("\n ---------------");
             // await initPrompt ();
             break;
@@ -65,7 +73,8 @@ async function mainPrompt () {
             console.log("Not enabled Yet");
             // await initPrompt ();
             break;
-    }
+    };
+    await inquirer.prompt(pause);
     await mainPrompt();
     return;
 };
@@ -74,7 +83,7 @@ async function initPrompt() {
     await mainPrompt();
 }
 
-async function testPrompt() {
+async function employeeAddPrompts() {
 
     const employeePrompts = [
         {
@@ -86,19 +95,25 @@ async function testPrompt() {
             type: "list",
             name: "empRole",
             message: "What role will this employee have?",
-            choices: await displayChoices("title", "roles"),
+            choices: await dispRoleChoices(),
+        },
+        {
+            type: "list",
+            name: "empMgr",
+            message: "Who will be this employee's Manager",
+            choices: dispMgrChoices(),
         }
     ]
     
     await inquirer.prompt(employeePrompts);
+    console.log(answers);
 }
 
 // testPrompt();
 
 // initPrompt();
+dispRoleChoices();
+dispMgrChoices();
 
-// displayChoices(title, roles);
-
-// const departments = "departments";
-
+employeeAddPrompts();
 // await selectAll(departments);
