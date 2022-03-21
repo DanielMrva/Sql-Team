@@ -24,12 +24,14 @@ async function findID(table, column, value) {
     return thisID;
 }
 
-async function joinTable(){
-    db.query('SELECT employees.id AS ID, employees.first_name AS First, employees.last_name AS Last, roles.title, roles.salary, departments.department_name AS department, FROM employees INNER JOIN roles ON employees.role_id=roles.id INNER JOIN departments ON roles.department_id=departments.id', function (err, results){
-    
-    console.table(results);
-    })
+async function joinTable() {
+    let results = await db.promise().query('SELECT employees.first_name AS First, employees.last_name AS Last, roles.title, roles.salary, departments.department_name AS department FROM employees INNER JOIN roles ON employees.role_id=roles.id INNER JOIN departments ON roles.department_id=departments.id')
+
+    // , employees.manager_id=employees.full_name AS Managers
+
+    console.table(results[0])
 }
+
 
 
 module.exports = {selectAll, dispChoices, findID, joinTable};
