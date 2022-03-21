@@ -3,6 +3,8 @@ const inquirer = require("inquirer");
 // const cTable = require("console.table");
 const db = require("./db/index.js");
 const {selectAll, dispChoices, findID, joinTable} = require("./db/queries.js");
+const {addEmployee, addRole, addDepartment} = require("./utils/dbAdd.js")
+
 
 // GIVEN a command-line application that accepts user input
 // WHEN I start the application
@@ -44,26 +46,30 @@ async function mainPrompt () {
     switch (mainAction.mainAction) {
         
         case "View All Employees": 
-            let employees = "employees";
-            await selectAll(employees);
+            await selectAll("employees");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
             // await initPrompt ();
             break;
         case "View All Roles": 
-            let roles = "roles";
-            await selectAll(roles);
+            await selectAll("roles");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
             // await initPrompt ();
             break;
         case "View All Departments": 
-            let departments = "departments";
-            await selectAll(departments);
+            await selectAll("departments");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
             // await initPrompt ();
             break;
+        case "Add Employee": 
+            await addEmployee();
+            await selectAll("employees");
+            await inquirer.prompt(pause);
+            console.log("\n ---------------");
+            // await initPrompt ();
+            break;    
         case "Quit":
             console.log("Goodbye");
             process.exit();
@@ -84,12 +90,12 @@ async function addEmployee() {
     const employeePrompts = [
         {
             type: "text",
-            name: "empFirstName",
+            name: "empFirst",
             message: "What is the employee's first name?",
         },
         {
             type: "text",
-            name: "empLastName",
+            name: "empLast",
             message: "What is the employee's last name?",
         },
         {
@@ -105,12 +111,21 @@ async function addEmployee() {
             choices: await dispChoices("full_name", "employees"),
         }
     ]
-    let employeeAnswers = await inquirer.prompt(employeePrompts);
-    
-    console.log(employeeAnswers);
+    let empAns = await inquirer.prompt(employeePrompts);
+    // console.log(empAns);
+
+    let roleID = await findID("roles", "title", empAns.empRole);
+    // console.log(roleID);
+
+    let mgrID = await findID("employees", "full_name", empAns.empMgr);
+
+    // console.log(mgrID);
+
+    db.query(`INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES ('${empAns.empFirst}', '${empAns.empLast}', '${roleID}', '${mgrID}')`), (err, results) => {
+        if (err) return err };
 }
 
-// mainPrompt();
+mainPrompt();
 // testPrompt();
 // dispChoices("full_name", "employees");
 // initPrompt();

@@ -20,7 +20,7 @@ async function findID(table, column, value) {
     let results = await db.promise().query(`SELECT id from ${table} WHERE ${column} = '${value}'`)
     
     let thisID = results[0][0].id;
-    console.log(thisID);
+    // console.log(thisID);
     return thisID;
 }
 
