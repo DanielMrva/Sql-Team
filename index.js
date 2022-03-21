@@ -2,7 +2,7 @@ const mySql2 = require("mysql2");
 const inquirer = require("inquirer");
 // const cTable = require("console.table");
 const db = require("./db/index.js");
-const {selectAll, dispRoleChoices, dispMgrChoices, joinTable} = require("./db/queries.js");
+const {selectAll, dispChoices, findID, joinTable} = require("./db/queries.js");
 
 // GIVEN a command-line application that accepts user input
 // WHEN I start the application
@@ -31,10 +31,9 @@ const mainMenu = {
 };
 
 const pause = {
-    type: "type",
+    type: "input",
     name: "continue",
-    message: "Press Enter To Continue",
-    default: "true",
+    message: "Press Enter To Continue"
 }
 
 
@@ -74,46 +73,47 @@ async function mainPrompt () {
             // await initPrompt ();
             break;
     };
-    await inquirer.prompt(pause);
+    
     await mainPrompt();
     return;
 };
 
-async function initPrompt() {
-    await mainPrompt();
-}
 
-async function employeeAddPrompts() {
+async function addEmployee() {
 
     const employeePrompts = [
         {
             type: "text",
-            name: "empName",
-            message: "What is the employee's Name",
+            name: "empFirstName",
+            message: "What is the employee's first name?",
+        },
+        {
+            type: "text",
+            name: "empLastName",
+            message: "What is the employee's last name?",
         },
         {
             type: "list",
             name: "empRole",
             message: "What role will this employee have?",
-            choices: await dispRoleChoices(),
+            choices: await dispChoices("title", "roles"),
         },
         {
             type: "list",
             name: "empMgr",
             message: "Who will be this employee's Manager",
-            choices: dispMgrChoices(),
+            choices: await dispChoices("full_name", "employees"),
         }
     ]
+    let employeeAnswers = await inquirer.prompt(employeePrompts);
     
-    await inquirer.prompt(employeePrompts);
-    console.log(answers);
+    console.log(employeeAnswers);
 }
 
+// mainPrompt();
 // testPrompt();
-
+// dispChoices("full_name", "employees");
 // initPrompt();
-dispRoleChoices();
-dispMgrChoices();
-
-employeeAddPrompts();
+// findID("employees", "first_name", "Milo")
+// addEmployee();
 // await selectAll(departments);
