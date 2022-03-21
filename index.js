@@ -3,7 +3,7 @@ const inquirer = require("inquirer");
 // const cTable = require("console.table");
 const db = require("./db/index.js");
 const {selectAll, dispChoices, findID, joinTable} = require("./db/queries.js");
-const {addEmployee, addRole, addDepartment} = require("./utils/dbAdd.js")
+const {addEmployee, addRole, addDepartment, updateEmployee} = require("./utils/dbMod.js")
 
 
 // GIVEN a command-line application that accepts user input
@@ -46,37 +46,51 @@ async function mainPrompt () {
     switch (mainAction.mainAction) {
         
         case "View All Employees": 
-            await selectAll("employees");
+            // await selectAll("employees");
+            await joinTable();
             await inquirer.prompt(pause);
             console.log("\n ---------------");
-            // await initPrompt ();
             break;
         case "View All Roles": 
             await selectAll("roles");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
-            // await initPrompt ();
             break;
         case "View All Departments": 
             await selectAll("departments");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
-            // await initPrompt ();
             break;
         case "Add Employee": 
             await addEmployee();
             await selectAll("employees");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
-            // await initPrompt ();
-            break;    
+            break;
+        case "Add Role": 
+            await addRole();
+            await selectAll("roles");
+            await inquirer.prompt(pause);
+            console.log("\n ---------------");
+            break; 
+        case "Add Department": 
+            await addDepartment();
+            await selectAll("departments");
+            await inquirer.prompt(pause);
+            console.log("\n ---------------");
+            break;
+        case "Update Employee Role": 
+            await updateEmployee();
+            await selectAll("employees");
+            await inquirer.prompt(pause);
+            console.log("\n ---------------");
+            break; 
         case "Quit":
             console.log("Goodbye");
             process.exit();
             break;
         default:
             console.log("Not enabled Yet");
-            // await initPrompt ();
             break;
     };
     
@@ -84,46 +98,6 @@ async function mainPrompt () {
     return;
 };
 
-
-async function addEmployee() {
-
-    const employeePrompts = [
-        {
-            type: "text",
-            name: "empFirst",
-            message: "What is the employee's first name?",
-        },
-        {
-            type: "text",
-            name: "empLast",
-            message: "What is the employee's last name?",
-        },
-        {
-            type: "list",
-            name: "empRole",
-            message: "What role will this employee have?",
-            choices: await dispChoices("title", "roles"),
-        },
-        {
-            type: "list",
-            name: "empMgr",
-            message: "Who will be this employee's Manager",
-            choices: await dispChoices("full_name", "employees"),
-        }
-    ]
-    let empAns = await inquirer.prompt(employeePrompts);
-    // console.log(empAns);
-
-    let roleID = await findID("roles", "title", empAns.empRole);
-    // console.log(roleID);
-
-    let mgrID = await findID("employees", "full_name", empAns.empMgr);
-
-    // console.log(mgrID);
-
-    db.query(`INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES ('${empAns.empFirst}', '${empAns.empLast}', '${roleID}', '${mgrID}')`), (err, results) => {
-        if (err) return err };
-}
 
 mainPrompt();
 // testPrompt();
