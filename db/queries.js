@@ -1,8 +1,25 @@
 const db = require("./index.js");
 
-async function selectAll(table) {
-    let results = await db.promise().query(`SELECT * FROM ${table}`)
-    console.table(results[0]);
+async function joinTable(table) {
+    switch (table) {
+        case "roles":
+            let roleResults = await db.promise().query(`SELECT ${table}.title, roles.salary, departments.department_name FROM roles LEFT JOIN departments ON roles.department_id=departments.id;`);
+            console.table(roleResults[0]);
+            break;
+        case "departments":
+            let dResults = await db.promise().query(`SELECT * FROM ${table}`);
+            console.table(dResults[0]);
+            break;
+        case "employees":
+            let eResults = await db.promise().query('SELECT e.full_name AS Employee, m.full_name AS Managers, roles.title, roles.salary, departments.department_name AS Department FROM employees e INNER JOIN employees m on m.id = e.manager_id LEFT JOIN roles on e.role_id=roles.id LEFT JOIN departments on roles.department_id=departments.id');
+            console.table(eResults[0]);
+            break;
+        default:
+            console.log("Something went wrong with displaying from database...");
+        break;
+            
+    }
+        
 };
 
 async function dispChoices(column, table) {
@@ -24,17 +41,13 @@ async function findID(table, column, value) {
     return thisID;
 }
 
-async function joinTable() {
-    let results = await db.promise().query('SELECT employees.first_name AS First, employees.last_name AS Last, roles.title, roles.salary, departments.department_name AS department FROM employees INNER JOIN roles ON employees.role_id=roles.id INNER JOIN departments ON roles.department_id=departments.id')
+// async function joinTable() {
+//     let results = await db.promise().query('SELECT e.full_name AS Employee, m.full_name AS Managers, roles.title, roles.salary, departments.department_name AS Department FROM employees e INNER JOIN employees m on m.id = e.manager_id LEFT JOIN roles on e.role_id=roles.id LEFT JOIN departments on roles.department_id=departments.id')
 
-    // , employees.manager_id=employees.full_name AS Managers
+//     console.table(results[0])
+// };
 
-    console.table(results[0])
-}
-
-
-
-module.exports = {selectAll, dispChoices, findID, joinTable};
+module.exports = {dispChoices, findID, joinTable};
 
 //coding artifacts below
 

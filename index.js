@@ -2,7 +2,7 @@ const mySql2 = require("mysql2");
 const inquirer = require("inquirer");
 // const cTable = require("console.table");
 const db = require("./db/index.js");
-const {selectAll, dispChoices, findID, joinTable} = require("./db/queries.js");
+const {dispChoices, findID, joinTable} = require("./db/queries.js");
 const {addEmployee, addRole, addDepartment, updateEmployee} = require("./utils/dbMod.js")
 
 
@@ -46,42 +46,41 @@ async function mainPrompt () {
     switch (mainAction.mainAction) {
         
         case "View All Employees": 
-            // await selectAll("employees");
-            await joinTable();
+            await joinTable("employees");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
             break;
         case "View All Roles": 
-            await selectAll("roles");
+            await joinTable("roles");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
             break;
         case "View All Departments": 
-            await selectAll("departments");
+            await joinTable("departments");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
             break;
         case "Add Employee": 
             await addEmployee();
-            await selectAll("employees");
+            await joinTable("employees");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
             break;
         case "Add Role": 
             await addRole();
-            await selectAll("roles");
+            await joinTable("roles");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
             break; 
         case "Add Department": 
             await addDepartment();
-            await selectAll("departments");
+            await joinTable("departments");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
             break;
         case "Update Employee Role": 
             await updateEmployee();
-            await selectAll("employees");
+            await joinTable("employees");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
             break; 
@@ -99,10 +98,11 @@ async function mainPrompt () {
 };
 
 
+
+// joinTable();
 mainPrompt();
 // testPrompt();
 // dispChoices("full_name", "employees");
 // initPrompt();
 // findID("employees", "first_name", "Milo")
 // addEmployee();
-// await selectAll(departments);

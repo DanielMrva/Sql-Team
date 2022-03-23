@@ -2,7 +2,7 @@ const mySql2 = require("mysql2");
 const inquirer = require("inquirer");
 // const cTable = require("console.table");
 const db = require("../db/index.js");
-const {selectAll, dispChoices, findID, joinTable} = require("../db/queries.js");
+const {dispChoices, findID, joinTable} = require("../db/queries.js");
 
 async function addEmployee() {
 
