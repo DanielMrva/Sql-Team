@@ -106,7 +106,7 @@ async function addDepartment() {
 }
 
 //update employee prompt function
-async function updateEmployee() {
+async function updateEmployeeRole() {
     //object containing prompt questions
     const empUpdatePrompts = [
         {
@@ -123,6 +123,32 @@ async function updateEmployee() {
             //invoked function to list role choices
             choices: await dispChoices("title", "roles"),
         },
+        
+    ]
+    
+    //answers set to variable
+    let empUpAns = await inquirer.prompt(empUpdatePrompts);
+
+    //role id set to variable, value returned from query function
+    let roleID = await findID("roles", "title", empUpAns.empUpRole);
+
+    
+    //db query used to update db
+    db.query(`UPDATE employees SET role_id = '${roleID}'WHERE full_name = '${empUpAns.empUpName}'`), (err, results) => {
+        if (err) return err };
+}
+
+
+async function updateEmployeeMgr() {
+    //object containing prompt questions
+    const empUpdatePrompts = [
+        {
+            type: "list",
+            name: "empUpName",
+            message: "Which employee would you like to update?",
+            //invoked function to list target employee choices
+            choices: await dispChoices("full_name", "employees"),
+        },
         {
             type: "list",
             name: "empUpMgr",
@@ -136,15 +162,11 @@ async function updateEmployee() {
     //answers set to variable
     let empUpAns = await inquirer.prompt(empUpdatePrompts);
 
-    //role id set to variable, value returned from query function
-    let roleID = await findID("roles", "title", empUpAns.empUpRole);
-
     //mgr id set to variable, value returned from query function
     let empMgr = await findID("employees", "full_name", empUpAns.empUpMgr);
     //db query used to update db
-    db.query(`UPDATE employees SET role_id = '${roleID}', manager_id=${empMgr} WHERE full_name = '${empUpAns.empUpName}'`), (err, results) => {
+    db.query(`UPDATE employees SET manager_id=${empMgr} WHERE full_name = '${empUpAns.empUpName}'`), (err, results) => {
         if (err) return err };
 }
-
-module.exports = {addEmployee, addRole, addDepartment, updateEmployee};
+module.exports = {addEmployee, addRole, addDepartment, updateEmployeeRole, updateEmployeeMgr};
 

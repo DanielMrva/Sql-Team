@@ -11,10 +11,10 @@ const inquirer = require("inquirer");
 const db = require("./db/index.js");
 
 //link to queries functions
-const {dispChoices, findID, joinTable} = require("./db/queries.js");
+const {dispChoices, findID, joinTablee} = require("./db/queries.js");
 
 //link to db-modifying functions in utils folder
-const {addEmployee, addRole, addDepartment, updateEmployee} = require("./utils/dbMod.js")
+const {addEmployee, addRole, addDepartment, updateEmployeeRole, updateEmployeeMgr} = require("./utils/dbMod.js")
 
 /**
  * Main menu function, contains object for main menu prompts, a pause prompt, and a main action variable set equal to the responses.  Contains switch for invoking various functions depending on main menu prompt
@@ -28,7 +28,7 @@ async function mainPrompt () {
         type: "list",
         name: "mainAction",
         message: "What would you like to do?",
-        choices: ["View All Employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department", "Quit"]
+        choices: ["View All Employees", "Add Employee", "Update Employee Role", "Update Employee Manager", "View All Roles", "Add Role", "View All Departments", "Add Department", "Quit"]
     };
     //object for pause prompt which aids in proper display
     const pause = {
@@ -75,7 +75,13 @@ async function mainPrompt () {
             console.log("\n ---------------");
             break;
         case "Update Employee Role": 
-            await updateEmployee();
+            await updateEmployeeRole();
+            await joinTable("employees");
+            await inquirer.prompt(pause);
+            console.log("\n ---------------");
+            break; 
+        case "Update Employee Manager": 
+            await updateEmployeeMgr();
             await joinTable("employees");
             await inquirer.prompt(pause);
             console.log("\n ---------------");
