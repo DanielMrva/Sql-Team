@@ -19,7 +19,7 @@ VALUES  ("Research Manager", 100000, 1),
         
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
-VALUES ("Lynn", "Learning", 1, NULL),
+VALUES ("Lynn", "Learning", 1, 1),
        ("Reginold", "Research", 2, 1),
        ("Regina", "Discovery", 3, 2),
        ("Michael", "Meechan", 4, 1),

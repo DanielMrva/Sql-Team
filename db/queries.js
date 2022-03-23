@@ -1,5 +1,10 @@
 const db = require("./index.js");
 
+/**
+ * 
+ * @param {string} table table to be targeted
+ * @returns {void} nothing, but it does console.table the results of the db query depending on switch statement
+ */
 async function joinTable(table) {
     switch (table) {
         case "roles":
@@ -17,91 +22,38 @@ async function joinTable(table) {
         default:
             console.log("Something went wrong with displaying from database...");
         break;
-            
     }
-        
 };
 
+/**
+ * 
+ * @param {string} column column to be targeted
+ * @param {string} table table to be targeted
+ * @returns {array} array of all of the values from the column
+ */
 async function dispChoices(column, table) {
     
     let results = await db.promise().query(`SELECT ${column} FROM ${table}`)
     let choices = [];
 
     results[0].forEach(element => choices.push(element[`${column}`]))
-    // console.log(choices);
     return choices;
     
 };
 
+/**
+ * @async so it can await the db query
+ * @param {string} table table targeted for search
+ * @param {string} column collumn to referance
+ * @param {string} value value searched for
+ * @returns {number}the id number on the table targeted
+ */
 async function findID(table, column, value) {
     let results = await db.promise().query(`SELECT id from ${table} WHERE ${column} = '${value}'`)
     
     let thisID = results[0][0].id;
-    // console.log(thisID);
+
     return thisID;
 }
 
-// async function joinTable() {
-//     let results = await db.promise().query('SELECT e.full_name AS Employee, m.full_name AS Managers, roles.title, roles.salary, departments.department_name AS Department FROM employees e INNER JOIN employees m on m.id = e.manager_id LEFT JOIN roles on e.role_id=roles.id LEFT JOIN departments on roles.department_id=departments.id')
-
-//     console.table(results[0])
-// };
-
 module.exports = {dispChoices, findID, joinTable};
-
-//coding artifacts below
-
-// async function dispMgrChoices() {
-//     let choices =[];
-//     db.query(`Select first_name, last_name from employees`, function (err, results) {
-//         let protoChoices = [];
-        
-        
-//         results.forEach(element => protoChoices.push(Object.values(element)));
-//         protoChoices.forEach(element => choices.push(element.join(' ')));
-//         // console.log(protoChoices);
-        
-//     })
-    
-//     return choices;
-    
-// };
-
-// async function dispDptChoices() {
-//     let choices =[];
-//     db.query(`SELECT department_name FROM departments`, function (err, results) {
-        
-//         results.forEach(element => choices.push(element.department_name));
-//         console.log(choices);
-//     })
-    
-//     return choices;
-    
-// };
-
-
-// async function dispRoleChoices() {
-//     let choices =[];
-//     db.query(`Select title from roles`, function (err, results) {
-        
-//         results.forEach(element => choices.push(element.title));
-//         // console.log(choices);
-//     })
-    
-//     return choices;
-    
-// };
-
-// async function dispChoicesONE(column, table) {
-//     let choices =[];
-//     // let key = column;
-//     db.query(`Select ${column} from ${table}`, function (err, results) {
-//         // console.log(results);
-//         results.forEach(element => choices.push(element[`${column}`]));
-//         // console.log(choices);
-//     })
-    
-//     return choices;
-    
-// };
-
